@@ -1,43 +1,30 @@
 
 import React, { useState, useEffect } from "react";
+import './../styles/App.css';
 
 const App = () => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [data, setdata] = useState([]);
 
   useEffect(() => {
-    setLoading(true);
-    fetch("https://dummyjson.com/products")
-      .then((response) => response.json())
-      .then((json) => {
-        setData(json);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error);
-        setLoading(false);
-      });
+    function fetchData() {
+      fetch("https://dummyjson.com/products")
+        .then((res) => (res.json()))
+        .then((res) => { setdata(res) })
+        .catch((err) => { console.log(err); setdata(`An error occurred: ${err}`) })
+    }
+    fetchData();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>An error occurred: {error.message}</div>;
-  }
-
   if (!data) {
-    return <div>No data found</div>;
+    return <p>Loading product data...</p>;
   }
 
   return (
-    <div>
+    <div className="app">
       <h1>Data Fetched from API</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <pre className="data">{JSON.stringify(data, null, 2)}</pre>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
